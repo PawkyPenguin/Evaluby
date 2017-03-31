@@ -1,3 +1,4 @@
-# available literals: studyplace, studyfield, mult[N], mult[N]Other, plain
+# available literals: studyplace, studyfield, mult[N], mult[N]Other(N)?, plain
 mult4
 plain
+mult5Other2
