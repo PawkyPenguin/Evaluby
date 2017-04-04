@@ -1,8 +1,6 @@
 require 'gruff'
-require './QuestionnaireConstants.rb'
 
 class GraphDrawer
-	include QuestionnaireConstants
 
 	def initialize()
 	end
