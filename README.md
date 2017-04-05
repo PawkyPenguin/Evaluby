@@ -7,9 +7,19 @@ Evaluby, pronounced eva-looby (/ɛvɑ'lu:bj/) - yes, the phonetic spelling was t
 The resulting format is a pdf, but it's just composed of individual markdown, latex and png files that get merged together with pandoc.
 Evaluby uses Gruff as a graphing tool.
 
+## Note
+
+Please use my own fork of the `gruff` project available at [https://github.com/PawkyPenguin/gruff](https://github.com/PawkyPenguin/gruff). As of now, I have a pull request pending that implements the feature of automatic linebreaks in the graph title. If you don't use my own project, you will need to enter the linebreaks into your questions yourself so that they don't go over the image boundaries.
+
 ## Installation/Usage
 
-Just clone the git repo and you're pretty much set. To start the digitalizing of your questionnaire, execute questionnaireReader.rb. For producing the evaluation and the graphs, execute statisticalEvaluation.rb after you've finished digitalizing your questionnaires.
+First, download my fork of the gruff project (in case my pull request is accepted, this is obsolete, in that case you can just follow the steps at [https://github.com/topfunky/gruff](https://github.com/topfunky/gruff) ). Then, add the library to your ruby gem files.
+- `git clone git@github.com:PawkyPenguin/gruff.git`
+- `ln -s gruff ~/.gem/ruby/<your-ruby-version>/gems/gruff-<your-gruff-version>`
+
+
+Then clone the git repo and you're pretty much set regarding the installation. To start the digitalizing of your questionnaire, execute questionnaireReader.rb. For producing the evaluation and the graphs, execute statisticalEvaluation.rb after you've finished digitalizing your questionnaires.
+
 In order to make it possible for your questionnaire to be digitalized, Evaluby needs a few files:
 - First of all, name your questionnaire with something short, so you can remember it. Place a directory with that name under data and evaluation. I.e. `mkdir data/example evaluation/example`
 - Into `templates/`, place two files: `example.tp` and `example.fmt`. These files are used so Evaluby knows how the questionnaire looks like. 

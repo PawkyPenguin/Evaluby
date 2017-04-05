@@ -50,7 +50,6 @@ class GraphDrawer
 		graph.show_labels_for_bar_values = true
 		graph.font = "/usr/share/fonts/TTF/DejaVuSansMono.ttf"
 
-		
 		# If the Hash's keys are only integers, perform a sort. If not, don't.
 		doSorting = true
 		for key, el in accumulatedDataHash
