@@ -12,7 +12,7 @@ class GraphDrawer
 	def accumulateArray(array, symbolList, cutoffSize)
 		accumulation = {}
 		for s in symbolList
-			accumulation[s] = 0
+			accumulation[s.intern] = 0 # call intern because better safe than sorry.
 		end
 		for el in array
 			if !accumulation.has_key? el.intern
@@ -24,8 +24,7 @@ class GraphDrawer
 		# If the array has too much length, we employ an "other" field. The fields in the hash that don't have enough elements of the array simply get dropped.
 		# We first assign 0 to the :other field, so it gets removed for sure and later reinsert it.
 		#
-		if accumulation.size > cutoffSize
-			cutoffSize -= 1 # adjust cutoffSize. This is for easier indexing.
+		if accumulation.size >= cutoffSize
 			otherField = accumulation[:other]
 			otherField ||= 0
 			accumulation[:other] = 0
@@ -53,9 +52,10 @@ class GraphDrawer
 		# If the Hash's keys are only integers, perform a sort. If not, don't.
 		doSorting = true
 		for key, el in accumulatedDataHash
-			isInteger = Integer(key.to_s) rescue false
+			isInteger = key.to_s.to_i.to_s == key.to_s # dear god.
 			if !isInteger
 				doSorting = false
+				break
 			end
 		end
 		if doSorting
@@ -80,7 +80,7 @@ class GraphDrawer
 			data << line.chomp
 		end
 
-		data = accumulateArray(data, [], 5)
+		data = accumulateArray(data, [], 4)
 		graph = getStandardBarGraph(data, "Where are you studying?")
 		return graph
 	end
@@ -90,7 +90,7 @@ class GraphDrawer
 		for line in file.readlines
 			data << line.chomp
 		end
-		data = accumulateArray(data, [], 10)
+		data = accumulateArray(data, [], 9)
 		graph = getStandardBarGraph(data, "What are you studying?")
 		return graph
 	end
@@ -154,7 +154,7 @@ class GraphDrawer
 			end
 		end
 		# Accumulate the array into a Hash.
-		data = accumulateArray(data, labels, 10)
+		data = accumulateArray(data, labels, 9)
 		graph = getStandardBarGraph(data, graphTitle)
 		return graph
 	end

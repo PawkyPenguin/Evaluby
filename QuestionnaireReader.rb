@@ -2,6 +2,12 @@
 
 require "./QuestionnaireConstants.rb"
 
+class String
+	def represents_integer?
+		self.to_i.to_s == self
+	end
+end
+
 class QuestionnaireReader
 	include QuestionnaireConstants
 
@@ -13,16 +19,16 @@ class QuestionnaireReader
 	# This method is incredibly ugly. Basically what it does is take a string, attempt to convert it to integer and if it works, checks whether it is
 	# within the bounds of the array PredefinedUnis. If it isn't, it will return true only if the string is NOT an integer (this adds a certain amount of fail-safety to user input).
 	def studyplace(s)
-		i = Integer(s) rescue s
 		success = false
 		university = case s
 			     when /\s+/
 				     success = true
 				     "no"
-			     else 
+			     else
 				     s
 			     end
-		if i.is_a? Integer
+		if s.represents_integer?
+			i = s.to_i
 			if (1..PredefinedUnis.length).member? i
 				university = PredefinedUnis[i - 1]
 				success = true
@@ -42,7 +48,11 @@ class QuestionnaireReader
 		if s == "0"
 			return true, ""
 		end
-		i = Integer(s) rescue -1
+		if s.represents_integer?
+			i = s.to_i
+		else
+			i = 0
+		end
 		return (1..n).member?(i), s
 	end
 
@@ -52,12 +62,16 @@ class QuestionnaireReader
 			return true, ""
 		end
 		isOther = false
-		i = 0
-		if s =~ /^#{otherPosition}(.*)$/ 
+		i = -1
+		if s =~ /^#{otherPosition}(.*)$/
 			isOther = true
-			s = "o_#{$1}" 
-		else 
-			i = Integer(s) rescue -1
+			s = "o_#{$1}"
+		else
+			if s.represents_integer?
+				i = s.to_i
+			else
+				i = -1
+			end
 		end
 		return (i != otherPosition && (1..amountOfChoices).member?(i)) || isOther, s
 	end
@@ -74,14 +88,12 @@ class QuestionnaireReader
 			if part =~ /^#{otherPosition}(.*)$/ && !isOther
 				isOther = true
 				formattedOutput += "o_#{$1} "
-			else 
-				begin
+			else
+				if part.represents_integer?
 					i = Integer(part)
-					if !(1..amountOfChoices).member?(i)
-						correctFormat = false
-					end
+					correctFormat = (1..amountOfChoices).member?(i)
 					formattedOutput += "#{i} "
-				rescue
+				else
 					correctFormat = false
 				end
 			end
@@ -100,7 +112,7 @@ class QuestionnaireReader
 			answerCorrectFormat = false
 			while !answerCorrectFormat
 				answerCorrectFormat, formattedAnswer = case line
-								       when "plain" 
+								       when "plain"
 									       puts "plain:"
 									       answer = gets.chomp
 									       plain(answer)
@@ -108,23 +120,23 @@ class QuestionnaireReader
 									       puts "studyplace:"
 									       answer = gets.chomp
 									       studyplace(answer)
-								       when "studyfield" 
+								       when "studyfield"
 									       puts "studyfield: #{Studyfields}"
 									       answer = gets.chomp
 									       studyfield(answer)
-								       when /mult([0-9]*)$/ 
+								       when /mult([0-9]*)$/
 									       puts "mult#{$1}:"
 									       answer = gets.chomp
 									       multN(answer, "#{$1}".to_i)
-								       when /mult([0-9]*)Other([0-9]*)$/ 
+								       when /mult([0-9]*)Other([0-9]*)$/
 									       puts "mult#{$1}Other#{$2}:"
 									       answer = gets.chomp
 									       multNOtherN(answer, "#{$1}".to_i, "#{$2}".to_i)
-								       when /many([0-9]*)Other([0-9]*)$/ 
+								       when /many([0-9]*)Other([0-9]*)$/
 									       puts "many#{$1}Other#{$2}:"
 									       answer = gets.chomp
 									       manyNOtherN(answer, "#{$1}".to_i, "#{$2}".to_i)
-								       else 
+								       else
 									       puts "Error in template file: Unexpected literal"
 									       exit 1
 								       end
@@ -140,7 +152,7 @@ class QuestionnaireReader
 			end
 			i += 1
 		end
-		puts 
+		puts
 		puts
 	end
 
@@ -177,7 +189,7 @@ class QuestionnaireReader
 			puts "#{i + 1}) #{filename}"
 		end
 
-		puts 
+		puts
 		i = -1
 		while !(1..filenames.length).member? i
 			puts "Enter your selection"
