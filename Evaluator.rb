@@ -96,14 +96,17 @@ class Evaluator
 	end
 
 	def self.writeGraphToFolder(graph, filename, filepath)
-			graph.write(filepath + filename + '.png')
-			markdownGraphFile = File.open(filepath + filename + '.md', 'w')
-			markdownGraphFile.puts "# #{graph.title.gsub('\n', '').chomp} #"
-			markdownGraphFile.puts ""
-			markdownGraphFile.puts "![#{filename}](#{filename + '.png'})"
-			markdownGraphFile.puts "\\FloatBarrier"
-			markdownGraphFile.puts ""
-			markdownGraphFile.close
+		if !File.exists? filepath
+			Dir.mkdir filepath
+		end
+		graph.write(filepath + filename + '.png')
+		markdownGraphFile = File.open(filepath + filename + '.md', 'w')
+		markdownGraphFile.puts "# #{graph.title.gsub('\n', '').chomp} #"
+		markdownGraphFile.puts ""
+		markdownGraphFile.puts "![#{filename}](#{filename + '.png'})"
+		markdownGraphFile.puts "\\FloatBarrier"
+		markdownGraphFile.puts ""
+		markdownGraphFile.close
 	end
 
 	def self.writePlainquestionToFolder(data, filename, filepath, title )
