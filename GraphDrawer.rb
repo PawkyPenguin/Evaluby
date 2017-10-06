@@ -42,12 +42,15 @@ class GraphDrawer
 		return accumulation
 	end
 
-	# Takes as an argument some data in the form of a (label, data)-Hash and a graph title. Note that the elements of the Hash, i.e. "data", simply are integers indicating the number of respondents.
+	# Takes as an argument some data in the form of a (label, data)-Hash and a graph title. Note that the elements of the Hash, i.e. `data`, are integers indicating the number of responses for that answer
 	def getStandardBarGraph(accumulatedDataHash, title)
 		graph = Gruff::Bar.new
 		graph.hide_legend = false
 		graph.show_labels_for_bar_values = true
-		graph.font = "/usr/share/fonts/TTF/DejaVuSansMono.ttf"
+		# dejavusansmono is the objectively best font
+		if File.exists? "/usr/share/fonts/TTF/DejaVuSansMono.ttf"
+			graph.font = "/usr/share/fonts/TTF/DejaVuSansMono.ttf"
+		end
 
 		# If the Hash's keys are only integers, perform a sort. If not, don't.
 		doSorting = true
@@ -64,14 +67,34 @@ class GraphDrawer
 			graphData = accumulatedDataHash
 		end
 
+		# Set graph attributes. Always set font size before title so the title can be linebreak'ed at the appropriate places
 		graph.labels = {0 => "Amount of answers"}
 		graph.title_font_size = 16.0
 		graph.title_margin = 30;
 		graph.title = title
-		graphData.each {|key, element| graph.data(key, element)}
 		graph.minimum_value = 0
-		graph.maximum_value = 100
+		graph.maximum_value = getMaxY(accumulatedDataHash.values.max)
+		graphData.each {|key, element| graph.data(key, element)}
 		return graph
+	end
+
+	# Returns the max value of the y-axis the graph should have.
+	private def getMaxY(answersAmount)
+		# This basically makes sure that our max Y is always a nice value. "A nice value" means a digit followed by either 0 or 5. (or just a number between 1 and 10)
+		# e.g. for parameter 26 returns 30, for 34 35, for 104 150, for 1670 2000 etc.
+		# Additionally, if the first digit is already >5, the returned value will always be a digit followed by 0.
+		# e.g. 780 => 800, 720 => 800, 640 => 700, 8398 => 9000 etc..
+		if answersAmount < 10
+			return answersAmount
+		end
+		magnitude = 10 ** Math.log10(answersAmount).to_i
+		secondDigit, firstDigit = answersAmount.digits[-2,2]
+		if firstDigit >= 5 || secondDigit >= 5
+			return (firstDigit + 1) * magnitude
+		else
+			# firstDigit is <5 and secondDigit is <5
+			return firstDigit * magnitude + magnitude / 2
+		end
 	end
 
 	def evaluateStudyplaceData(file)
