@@ -1,31 +1,38 @@
 # Evaluby
 
-Evaluby, pronounced eva-looby (/ɛvɑ'lu:bj/) - yes, the phonetic spelling was totally necessary - is a piece of software written in Ruby that's supposed to make it easier to evaluate questionnaires. It's mainly meant for evaluating questionnaires on paper that you can digitalize by typing with the help of Evaluby. In other words, Evaluby hopefully makes it a bit easier for you to digitalize paper questionnaires and later do a small amount of graphing for "presenting" the results of your questionnaires:
+Evaluby, pronounced eva-looby (/ɛvɑ'lu:bj/), is a piece of software written in Ruby that makes it easier to evaluate surveys. It is mainly meant for evaluating surveys on paper that you can digitalize by typing them into the running Evaluy application. In other words, Evaluby hopefully makes it a bit easier for you to digitalize paper surveys and later do a small amount of graphing for "presenting" the results of your questionnaires:
 
 ![evaluby.jpg](evaluby.jpg)
 
 The resulting format is a pdf, but it's just composed of individual markdown, latex and png files that get merged together with pandoc.
-Evaluby uses Gruff as a graphing tool.
+Evaluby uses `gruff` as the underlying graphing tool.
 
 ## Note
 
-Please use my own fork of the `gruff` project available at [https://github.com/PawkyPenguin/gruff](https://github.com/PawkyPenguin/gruff). As of now, I have a pull request pending that implements the feature of automatic linebreaks in the graph title. If you don't use my own project, you will need to enter the linebreaks into your questions yourself so that they don't go over the image boundaries.
+Please use my own fork of the `gruff` project available at [https://github.com/PawkyPenguin/gruff](https://github.com/PawkyPenguin/gruff). As of now, I have some pull requests pending for bugfixes and new features.
 
-## Installation/Usage
+## Installation
 
-First, download my fork of the gruff project (in case my pull request is accepted, this is obsolete, in that case you can just follow the steps at [https://github.com/topfunky/gruff](https://github.com/topfunky/gruff) ). Then, add the library to your ruby gem files.
+Download my fork of the `gruff` project. Then, install the library with rake so that you can use it. 
+*Note*: Unfortunately, the `gruff` project on Github seems to be dead. If this remains the case for a long time, I will probably create my own gem at some point. However, as of now, rake is the way to go for installing my fork.
 - `git clone git@github.com:PawkyPenguin/gruff.git`
-- `ln -s gruff ~/.gem/ruby/<your-ruby-version>/gems/gruff-<your-gruff-version>`
+- `cd gruff && rake install`
+- `cd .. && git clone git@github.com:PawkyPenguin/evaluby.git`
 
-
-Then clone the git repo and you're pretty much set regarding the installation. To start the digitalizing of your questionnaire, execute questionnaireReader.rb. For producing the evaluation and the graphs, execute statisticalEvaluation.rb after you've finished digitalizing your questionnaires.
-
-In order to make it possible for your questionnaire to be digitalized, Evaluby needs a few files:
-- First of all, name your questionnaire with something short, so you can remember it. Place a directory with that name under data and evaluation. I.e. `mkdir data/example evaluation/example`
-- Into `templates/`, place two files: `example.tp` and `example.fmt`. These files are used so Evaluby knows how the questionnaire looks like. 
-- Into `example.fmt`, put your questions and, for multiple choice questions, their answers (keep these short, they will appear in the graph. Something like 'disagree' and 'agree' is ideal).
-- Into `example.tp`, put the *kind* of question. For example, there are multiple choice questions (`multN`, where N is the number of choices), plain text questions (`plain`) and multiple choice questions where people are allowed multiple answers and there is a `other` field where people may write what they please (`manyNOtherM`, where N is the number of choices and M is the position of the other field, i.e. the number of the choice with the `other` field).
+## Usage
+Evaluby needs to things before you can start digitalizing your surveys: A template and a format (completely arbitrarily named). Let's go through an example with a survey called `mysurvey`.
+- Into `templates/`, place two files: `mysurvey.tp` and `mysurvey.fmt`. These are the template- and format file that Evaluby needs to know how your survey looks like
+- Into `mysurvey.fmt`, put your survey questions, line by line. For multiple choice questions, put the possible answers (keep these short, they will appear in the legend of the graph. Something like 'disagree' and 'agree' is ideal).
+- Into `mysurvey.tp`, put the *kind* of question. For example, there are multiple choice questions (`multN`), plain text questions (`plain`) and some others. Again, just specify your questions line by line.
 - You can now start digitalizing: execute `questionnaireReader.rb`. Evaluby will tell you the format of each question and will refuse to continue if you make a mistake. For example, when you type `5` in a multiple choice question with just 3 answers (`mult3`), it won't enter that wrong number and you'll instead have to retype it. For multiple choice questions, just type the number of the choice that person ticked (first choice is `1`). If multiple answers are allowed, just enter each number with spaces in between.
-- For multiple choice questions with 'other' fields, it's a bit more complicated: Let's say the question has five choices and the other field is at position two (i.e. second position, the indices are starting with 1 here). This would be a `mult5Other2` question. Let the question be "Which Linux distributions have you used before?". Possible answers are "Ubuntu", "Other: ...", "Linux Mint", "Fedora", "Arch Linux". If the person who answers the questionnaire has used Ubuntu, Debian and Fedora before, he'd obviously tick Ubuntu (1), Fedora (4) and the 'other' field (2) and write "Debian" into that field. So for digitalizing that particular, just type `1 4 2Debian`. The order of the numbers doesn't matter, so `4 2Debian 1` would work as well.
-- After you have done your digitalizing work, just stop the script with Ctrl-C. Then you can execute statisticalEvaluation.rb. The evaluated questionnaires will land in `evaluation/` where you should execute `./build.sh` if you want to pack all the files into a pdf.
+- Execute `./digitalize.rb`, then choose `mysurvey` by entering the according number. Evaluby will start looping through the questions and you can start typing answers. Hit Ctrl-C once you are done.
+- Execute `./statisticalEvaluation.rb`. Choose the survey you want evaluated. The evaluated surveys will land in `evaluation`. Execute `./build.sh` if you want to merge them to a pdf (requires pandoc).
 
+## Question Types
+Next, we go over question types Evaluby supports. Question types are used for the `*.tp` files. These determine which answers Evaluby allows during digitalization. 
+- `plain`: Question with a plaintext answer, e.g. "What was your opinion?". When digitalizing, enter plaintext.
+- `multN`: Multiple choice question with *N* answers. When digitalizing this question, enter a number.
+- `multNOtherM`: Multiple choice question with *N* answers, where the *M*th field is an "Other" field where people can give their own answer. When digitalizing, enter a number or type "o\_" followed by some text to make use of the "other" field.
+- `manyN`: Similar to `multN`, except that people answering your survey can check multiple answers. When digitalizing, just separate the numbers by a space.
+- `manyNOtherM`: Similar to `multNOtherM`, except that people answering your survey can check multiple answers. When digitalizing, just separate the numbers by a space and type "o\_" followed by some text to make use of the "other" field.
+- `studyplace` and `studyfield` are for questions asking participants about where and what they study because this software was originally made for evaluation of surveys at a university. These are probably not too helpful for you, but if you need them, you may find it helpful to add in some other answers to `QuestionnaireConstants.rb`.
