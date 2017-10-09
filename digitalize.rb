@@ -28,10 +28,8 @@ def survey_files_correct?(name)
 	end
 
 	# Get length for files
-	File.foreach("#{full_path}.tp") {}
-	template_length = $.
-	File.foreach("#{full_path}.fmt") {}
-	format_length = $.
+	template_length = File.foreach("#{full_path}.tp").inject(0) {|c, line| if line.chomp.strip.empty? or line.start_with? '#' then c else c+1 end}
+	format_length = File.foreach("#{full_path}.fmt").inject(0) {|c, line| if line.chomp.strip.empty? or line.start_with? '#' then c else c+1 end}
 
 	# If lengths don't match, return false
 	if (template_length != format_length)
@@ -53,10 +51,13 @@ survey_files += Dir.glob('templates/*.fmt')
 survey_files = survey_files.map{|f| File.basename(f, File.extname(f))}.uniq
 
 # For all survey files, try to create directories in `data/`.
-survey_files.each do |filename|
-	create_dir("data/#{filename}")
+# We remove an element from `survey_files` iff the associated template or format files are wrong
+survey_files.delete_if do |filename|
 	if survey_files_correct?(filename)
 		Process.exit(1) unless create_dir("data/#{filename}")
+		next false
+	else
+		next true
 	end
 end
 
