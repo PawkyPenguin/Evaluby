@@ -15,12 +15,13 @@ Please use my own fork of the `gruff` project available at [https://github.com/P
 
 Download my fork of the `gruff` project. Then, install the library with rake so that you can use it. 
 *Note*: Unfortunately, the `gruff` project on Github seems to be dead. If this remains the case for a long time, I will probably create my own gem at some point. However, as of now, rake is the way to go for installing my fork.
-- `git clone git@github.com:PawkyPenguin/gruff.git`
+- `git clone https://github.com/PawkyPenguin/Evaluby.git`
+- `gem install bundler #install bundler if you don't already have it`
 - `cd gruff && rake install`
 - `cd .. && git clone git@github.com:PawkyPenguin/evaluby.git`
 
 ## Usage
-Evaluby needs to things before you can start digitalizing your surveys: A template and a format (completely arbitrarily named). Let's go through an example with a survey called `mysurvey`.
+Evaluby needs two things before you can start digitalizing your surveys: A template and a format (completely arbitrarily named). Let's go through an example with a survey called `mysurvey`.
 - Into `templates/`, place two files: `mysurvey.tp` and `mysurvey.fmt`. These are the template- and format file that Evaluby needs to know how your survey looks like
 - Into `mysurvey.fmt`, put your survey questions, line by line. For multiple choice questions, put the possible answers (keep these short, they will appear in the legend of the graph. Something like 'disagree' and 'agree' is ideal).
 - Into `mysurvey.tp`, put the *kind* of question. For example, there are multiple choice questions (`multN`), plain text questions (`plain`) and some others. Again, just specify your questions line by line.
@@ -29,7 +30,8 @@ Evaluby needs to things before you can start digitalizing your surveys: A templa
 - Execute `./statisticalEvaluation.rb`. Choose the survey you want evaluated. The evaluated surveys will land in `evaluation`. Execute `./build.sh` if you want to merge them to a pdf (requires pandoc).
 
 ## Question Types
-Next, we go over question types Evaluby supports. Question types are used for the `*.tp` files. These determine which answers Evaluby allows during digitalization. 
+Next, we go over question types Evaluby supports. Question types are used for the `*.tp` files. These determine which answers Evaluby allows during digitalization. When digitalizing (i.e. when running `./digitalizer.rb`), you will usually either type numbers (for the `mult*` and `many*` questions) or just plaintext. Multiple answers are separated by a space. Some participants don't fill out all questions, so Evaluby allows you to skip a question. To skip a plaintext question, type a space then press Enter. To skip a question with numbers as answers, enter a 0.
+Here are all question types:
 - `plain`: Question with a plaintext answer, e.g. "What was your opinion?". When digitalizing, enter plaintext.
 - `multN`: Multiple choice question with *N* answers. When digitalizing this question, enter a number.
 - `multNOtherM`: Multiple choice question with *N* answers, where the *M*th field is an "Other" field where people can give their own answer. When digitalizing, enter a number or type "o\_" followed by some text to make use of the "other" field.
