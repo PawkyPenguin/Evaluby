@@ -181,6 +181,10 @@ class QuestionnaireReader
 
 	# Admittedly, this name is somewhat misleading. This method is for letting the *user* input the results of his questionnaires into the program.
 	def startReading(survey_files)
+		if survey_files.empty?
+			puts "No questionnaires found. There is a 'templates/' directory in the current directory."
+			Process.exit(0)
+		end
 		puts "Select the type of questionnaire:"
 		for filename, i in survey_files.each_with_index
 			puts "#{i + 1}) #{filename}"
