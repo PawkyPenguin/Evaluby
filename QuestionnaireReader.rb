@@ -138,7 +138,7 @@ class QuestionnaireReader
 									       manyNOtherN(answer, "#{$1}".to_i, "#{$2}".to_i)
 								       else
 									       puts "Error in template file: Unexpected literal"
-									       exit 1
+									       Process.exit(1)
 								       end
 				if !answerCorrectFormat
 					puts "Not correct format! Try again."
