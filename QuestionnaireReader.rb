@@ -180,24 +180,21 @@ class QuestionnaireReader
 	end
 
 	# Admittedly, this name is somewhat misleading. This method is for letting the *user* input the results of his questionnaires into the program.
-	def startReading
+	def startReading(survey_files)
 		puts "Select the type of questionnaire:"
-		filenames = Dir.open('data').find_all.to_a
-		filenames.delete '.'
-		filenames.delete '..'
-		for filename, i in filenames.each_with_index
+		for filename, i in survey_files.each_with_index
 			puts "#{i + 1}) #{filename}"
 		end
 
 		puts
 		i = -1
-		while !(1..filenames.length).member? i
+		while !(1..survey_files.length).member? i
 			puts "Enter your selection"
 			i = gets.to_i
 		end
-		outdir = "data/#{filenames[i - 1]}/"
+		outdir = "data/#{survey_files[i - 1]}/"
 
-		File.open("templates/#{filenames[i - 1]}.tp", 'r') do |template|
+		File.open("templates/#{survey_files[i - 1]}.tp", 'r') do |template|
 			while true
 				readQuestionnaire(template, outdir)
 			end
