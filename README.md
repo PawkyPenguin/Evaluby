@@ -15,10 +15,10 @@ Please use my own fork of the `gruff` project available at [https://github.com/P
 
 Download my fork of the `gruff` project. Then, install the library with rake so that you can use it. 
 *Note*: Unfortunately, the `gruff` project on Github seems to be dead. If this remains the case for a long time, I will probably create my own gem at some point. However, as of now, rake is the way to go for installing my fork.
-- `git clone https://github.com/PawkyPenguin/Evaluby.git`
+- `git clone https://github.com/PawkyPenguin/gruff.git`
 - `gem install bundler #install bundler if you don't already have it`
 - `cd gruff && rake install`
-- `cd .. && git clone git@github.com:PawkyPenguin/evaluby.git`
+- `cd .. && git clone https://github.com/PawkyPenguin/evaluby.git`
 
 ## Usage
 Evaluby needs two things before you can start digitalizing your surveys: A template and a format (completely arbitrarily named). Let's go through an example with a survey called `mysurvey`.
