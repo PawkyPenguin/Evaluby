@@ -111,35 +111,36 @@ class QuestionnaireReader
 			if line.empty? then next end
 			answerCorrectFormat = false
 			while !answerCorrectFormat
-				answerCorrectFormat, formattedAnswer = case line
-								       when "plain"
-									       puts "plain:"
-									       answer = gets.chomp
-									       plain(answer)
-								       when "studyplace"
-									       puts "studyplace:"
-									       answer = gets.chomp
-									       studyplace(answer)
-								       when "studyfield"
-									       puts "studyfield: #{Studyfields}"
-									       answer = gets.chomp
-									       studyfield(answer)
-								       when /mult([0-9]*)$/
-									       puts "mult#{$1}:"
-									       answer = gets.chomp
-									       multN(answer, "#{$1}".to_i)
-								       when /mult([0-9]*)Other([0-9]*)$/
-									       puts "mult#{$1}Other#{$2}:"
-									       answer = gets.chomp
-									       multNOtherN(answer, "#{$1}".to_i, "#{$2}".to_i)
-								       when /many([0-9]*)Other([0-9]*)$/
-									       puts "many#{$1}Other#{$2}:"
-									       answer = gets.chomp
-									       manyNOtherN(answer, "#{$1}".to_i, "#{$2}".to_i)
-								       else
-									       puts "Error in template file: Unexpected literal"
-									       Process.exit(1)
-								       end
+				answerCorrectFormat, formattedAnswer = 
+					case line
+					when "plain"
+						puts "plain:"
+						answer = gets.chomp
+						plain(answer)
+					when "studyplace"
+						puts "studyplace:"
+						answer = gets.chomp
+						studyplace(answer)
+					when "studyfield"
+						puts "studyfield: #{Studyfields}"
+						answer = gets.chomp
+						studyfield(answer)
+					when /mult([0-9]*)$/
+						puts "mult#{$1}:"
+						answer = gets.chomp
+						multN(answer, "#{$1}".to_i)
+					when /mult([0-9]*)Other([0-9]*)$/
+						puts "mult#{$1}Other#{$2}:"
+						answer = gets.chomp
+						multNOtherN(answer, "#{$1}".to_i, "#{$2}".to_i)
+					when /many([0-9]*)Other([0-9]*)$/
+						puts "many#{$1}Other#{$2}:"
+						answer = gets.chomp
+						manyNOtherN(answer, "#{$1}".to_i, "#{$2}".to_i)
+					else
+						puts "Error in template file: Unexpected literal"
+						Process.exit(1)
+					end
 				if !answerCorrectFormat
 					puts "Not correct format! Try again."
 				end
