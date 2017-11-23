@@ -13,8 +13,11 @@ Please use my own fork of the `gruff` project available at [https://github.com/P
 
 ## Installation
 
-Download my fork of the `gruff` project. Then, install the library with rake so that you can use it. 
-*Note*: Unfortunately, the `gruff` project on Github seems to be dead. If this remains the case for a long time, I will probably create my own gem at some point. However, as of now, rake is the way to go for installing my fork.
+The following commands download my fork of the `gruff` project and then install the library with rake so that you can use it. 
+*Note*: Unfortunately, the `gruff` project on GitHub seems to be dead. If this remains the case for a long time, I will probably create my own gem at some point. However, as of now, rake is the way to go for installing my fork.
+
+Execute the following commands:
+
 - `git clone https://github.com/PawkyPenguin/gruff.git`
 - `gem install bundler #install bundler if you don't already have it`
 - `cd gruff && rake install`
