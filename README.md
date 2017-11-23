@@ -4,7 +4,7 @@ Evaluby, pronounced eva-looby (/ɛvɑ'lu:bj/), is a piece of software written in
 
 ![evaluby.jpg](evaluby.jpg)
 
-The resulting format is a pdf, but it's just composed of individual markdown, latex and png files that get merged together with pandoc.
+The resulting format is a pdf, but it's just composed of individual markdown, LaTex and PNG files that get merged together with pandoc.
 Evaluby uses `gruff` as the underlying graphing tool.
 
 ## Note
@@ -25,7 +25,7 @@ Execute the following commands:
 
 ## Usage
 Evaluby needs two things before you can start digitalizing your surveys: A template and a format (completely arbitrarily named). Let's go through an example with a survey called `mysurvey`.
-- Into `templates/`, place two files: `mysurvey.tp` and `mysurvey.fmt`. These are the template- and format file that Evaluby needs to know how your survey looks like
+- Into `templates/`, place two files: `mysurvey.tp` and `mysurvey.fmt`. These are the template- and format files that Evaluby needs to know how your survey looks like.
 - Into `mysurvey.fmt`, put your survey questions, line by line. For multiple choice questions, put the possible answers (keep these short, they will appear in the legend of the graph. Something like 'disagree' and 'agree' is ideal).
 - Into `mysurvey.tp`, put the *kind* of question. For example, there are multiple choice questions (`multN`), plain text questions (`plain`) and some others. Again, just specify your questions line by line.
 - You can now start digitalizing: execute `questionnaireReader.rb`. Evaluby will tell you the format of each question and will refuse to continue if you make a mistake. For example, when you type `5` in a multiple choice question with just 3 answers (`mult3`), it won't enter that wrong number and you'll instead have to retype it. For multiple choice questions, just type the number of the choice that person ticked (first choice is `1`). If multiple answers are allowed, just enter each number with spaces in between.
@@ -33,7 +33,7 @@ Evaluby needs two things before you can start digitalizing your surveys: A templ
 - Execute `./statisticalEvaluation.rb`. Choose the survey you want evaluated. The evaluated surveys will land in `evaluation`. Execute `./build.sh` if you want to merge them to a pdf (requires pandoc).
 
 ## Question Types
-Next, we go over question types Evaluby supports. Question types are used for the `*.tp` files. These determine which answers Evaluby allows during digitalization. When digitalizing (i.e. when running `./digitalizer.rb`), you will usually either type numbers (for the `mult*` and `many*` questions) or just plaintext. Multiple answers are separated by a space. Some participants don't fill out all questions, so Evaluby allows you to skip a question. To skip a plaintext question, type a space then press Enter. To skip a question with numbers as answers, enter a 0.
+Next, we go over question types Evaluby supports. Question types are used for the `*.tp` files. These determine which answers Evaluby allows during digitalization. When digitalizing (i.e. when running `./digitalizer.rb`), you will usually either type numbers (for the `mult*` and `many*` questions) or just plaintext. Multiple answers are separated by a space. Some participants don't fill out all questions, so Evaluby allows you to skip a question. To skip a plaintext question, type a space then, press Enter. To skip a question with numbers as answers, enter a 0.
 Here are all question types:
 - `plain`: Question with a plaintext answer, e.g. "What was your opinion?". When digitalizing, enter plaintext.
 - `multN`: Multiple choice question with *N* answers. When digitalizing this question, enter a number.
