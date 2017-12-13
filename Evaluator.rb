@@ -74,7 +74,7 @@ class Evaluator
 					       graph = graphDrawer.evaluateMultNData(questionFile, "#{$1}".to_i, formatLine)
 					       self.writeGraphToFolder(graph, questionFilename, evaluationPath)
 				       else 
-					       puts "Error in template file: Unexpected literal"
+					       puts "Error in template file `#{templateFile}`: Unexpected literal"
 					       exit 1
 				       end
 			end
@@ -90,7 +90,7 @@ class Evaluator
 
 		File.open("#{evaluationPath}build.sh", 'w') do |file|
 			file.puts '#!/bin/sh'
-			file.puts "pandoc --include-in-header start.tex *.md -o #{questionnaire}.pdf"
+			file.puts "pandoc --include-in-header start.tex $(ls -1v *.md) -o #{questionnaire}.pdf"
 			file.chmod 0755
 		end
 	end
